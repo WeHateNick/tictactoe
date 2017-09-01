@@ -61,7 +61,7 @@ function init () {
 	log(chalk.yellow(
 		'Welcome to Nick\'s Tic Tac Toe'
 	));
-	inquirer.prompt(playerOptions).then(function (answer) {
+	inquirer.prompt(playerOptions).then( (answer) => {
 		clear();
 		log(chalk.yellow('Great. You selected', chalk.blue(answer.player)));
 		if (answer.player === 'Player X') {
@@ -98,7 +98,7 @@ function showBoard () {
 	`));
 }
 function showTurnOptions () {
-	inquirer.prompt(turnOptions).then(function (answer) {
+	inquirer.prompt(turnOptions).then( (answer) => {
 		makePlay(answer.cell);
 	})
 }
@@ -122,10 +122,10 @@ function computerTurn () {
 		thinking.stop();
 		clear();
 		log(chalk.yellow(`Your opponent selected ${chalk.red(selection[0])}`));
-		referee( () => { nextTurn(); });
+		referee( () => { playerTurn(); });
 	}, 4000);
 }
-function nextTurn () {
+function playerTurn () {
 	log(chalk.blue(`You\'re up again. Select a cell to put your "${chalk.yellow(player1Symbol)}" mark on`));
 	showTurnOptions();
 }
