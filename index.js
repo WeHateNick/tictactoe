@@ -2,8 +2,7 @@
 
 const chalk       = require('chalk');
 const clear       = require('clear');
-const CLI         = require('clui');
-const Spinner     = CLI.Spinner;
+const Spinner     = require('clui').Spinner;
 const figlet      = require('figlet');
 const inquirer    = require('inquirer');
 const _          	= require('lodash');
