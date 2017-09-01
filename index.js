@@ -6,6 +6,8 @@ const CLI         = require('clui');
 const figlet      = require('figlet');
 const inquirer    = require('inquirer');
 const fs          = require('fs');
+const _          	= require('lodash');
+const log					= console.log;
 
 var player1Symbol, player2Symbol;
 
@@ -43,48 +45,53 @@ let playerOptions = [
 
 function init () {
 	clear();
-	console.log(
+	log(
 	  chalk.yellow(
 	    figlet.textSync('Nick\'s Tic Tac Toe', { horizontalLayout: 'full' })
 	  )
 	);
-	console.log(
+	log(
 	  chalk.yellow('Welcome to Nick\'s Tic Tac Toe')
 	);
 	inquirer.prompt(playerOptions).then(function (answer) {
 		clear();
-		console.log(chalk.yellow('Great. You selected', answer.player));
+		log(chalk.yellow('Great. You selected', answer.player));
 		player1Symbol = answer.player === 'Player X' ? 'X' : 'O';
 		startGame();
 	})
 }
 function showBoard () {
-	console.log(chalk.yellow(`
+	log(chalk.yellow(`
 		      A    B    C
 
 		    +----+----+----+
-		1   | ${boardValues.a1} | ${boardValues.b1} | ${boardValues.c1} |
+		1   | ${chalk.gray(boardValues.a1)} | ${chalk.gray(boardValues.b1)} | ${chalk.gray(boardValues.c1)} |
 		    +----+----+----+
-		2   | ${boardValues.a2} | ${boardValues.b2} | ${boardValues.c2} |
+		2   | ${chalk.gray(boardValues.a2)} | ${chalk.gray(boardValues.b2)} | ${chalk.gray(boardValues.c2)} |
 		    +----+----+----+
-		3   | ${boardValues.a3} | ${boardValues.b3} | ${boardValues.c3} |
+		3   | ${chalk.gray(boardValues.a3)} | ${chalk.gray(boardValues.b3)} | ${chalk.gray(boardValues.c3)} |
 		    +----+----+----+
 	`));
 }
 function startGame () {
-	console.log(chalk.blue(`You\'re up first. Select a place to put your "${player1Symbol}" mark on`));
+	log(chalk.blue(`You\'re up first. Select a place to put your "${player1Symbol}" mark on`));
 	showBoard();
 	showTurnOptions();
 }
 function showTurnOptions () {
 	inquirer.prompt(turnOptions).then(function (answer) {
-		playerTurn(answer.cell.toLowerCase());
+		playerTurn(answer.cell);
 	})
 }
 function playerTurn (cell) {
-	console.log(`You selected ${cell}`);
-	boardValues[cell] = `${player1Symbol} `;
+	log(`You selected ${cell}`);
+	boardValues[cell.toLowerCase()] = `${player1Symbol} `;
 	showBoard();
+	_.pull(availableCells, cell)
+	nextTurn();
+}
+function nextTurn () {
+	showTurnOptions();	
 }
 
 init();
