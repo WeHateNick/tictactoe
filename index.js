@@ -6,7 +6,6 @@ const CLI         = require('clui');
 const Spinner     = CLI.Spinner;
 const figlet      = require('figlet');
 const inquirer    = require('inquirer');
-const fs          = require('fs');
 const _          	= require('lodash');
 const log					= console.log;
 
