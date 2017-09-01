@@ -38,7 +38,7 @@ let turnOptions = [
 	{
 	  type: 'list',
 	  name: 'cell',
-	  message: 'Select a cell where you would like to place your mark',
+	  message: 'Select a cell',
 	  choices: availableCells
 	}
 ];
@@ -47,7 +47,7 @@ let playerOptions = [
 	{
 	  type: 'list',
 	  name: 'player',
-	  message: 'Which player do you want to be?',
+	  message: 'Choose player:',
 	  choices: ['Player X', 'Player O']
 	}
 ];
@@ -77,16 +77,26 @@ function init () {
 		startGame();
 	})
 }
+let getBoardValue = (val) => {
+	let value = boardValues[val];
+	if (value[0] === player1Symbol) {
+		return chalk.blue(value);
+	} else if (value[0] === player2Symbol) {
+		return chalk.red(value);
+	} else {
+		return chalk.gray(value);
+	}
+};
 function showBoard () {
 	log(chalk.yellow(`
 		      A    B    C
 
 		    +----+----+----+
-		1   | ${chalk.gray(boardValues.a1)} | ${chalk.gray(boardValues.b1)} | ${chalk.gray(boardValues.c1)} |
+		1   | ${getBoardValue('a1')} | ${getBoardValue('b1')} | ${getBoardValue('c1')} |
 		    +----+----+----+
-		2   | ${chalk.gray(boardValues.a2)} | ${chalk.gray(boardValues.b2)} | ${chalk.gray(boardValues.c2)} |
+		2   | ${getBoardValue('a2')} | ${getBoardValue('b2')} | ${getBoardValue('c2')} |
 		    +----+----+----+
-		3   | ${chalk.gray(boardValues.a3)} | ${chalk.gray(boardValues.b3)} | ${chalk.gray(boardValues.c3)} |
+		3   | ${getBoardValue('a3')} | ${getBoardValue('b3')} | ${getBoardValue('c3')} |
 		    +----+----+----+
 	`));
 }
@@ -96,7 +106,7 @@ function showTurnOptions () {
 	})
 }
 function startGame () {
-	log(chalk.yellow(`You\'re up first. Select a place to put your "${chalk.blue(player1Symbol)}" mark on`));
+	log(chalk.yellow(`You\'re up first. Select a cell to put your "${chalk.blue(player1Symbol)}" mark on`));
 	showBoard();
 	showTurnOptions();
 }
@@ -158,7 +168,7 @@ function computerTurn () {
 	}, 4000);
 }
 function nextTurn () {
-	log(chalk.blue(`You\'re up again. Select a place to put your "${chalk.yellow(player1Symbol)}" mark on`));
+	log(chalk.blue(`You\'re up again. Select a cell to put your "${chalk.yellow(player1Symbol)}" mark on`));
 	showTurnOptions();
 }
 
