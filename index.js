@@ -61,9 +61,9 @@ function init () {
 		log(chalk.yellow('Great. You selected', answer.player));
 		if (answer.player === 'Player X') {
 			player1Symbol = 'X';
-			player2Symbol = '0';
+			player2Symbol = 'O';
 		} else {
-			player1Symbol = '0';
+			player1Symbol = 'O';
 			player2Symbol = 'X';
 		}
 		startGame();
@@ -111,6 +111,11 @@ function computerTurn () {
 	boardValues[selection[0].toLowerCase()] = `${player2Symbol} `;
 	log(chalk.red(`Your opponent selected ${chalk.yellow(selection[0])}`));
 	showBoard();
+	nextTurn();
+}
+function nextTurn () {
+	log(chalk.blue(`You\'re up again. Select a place to put your "${chalk.yellow(player1Symbol)}" mark on`));
+	showTurnOptions();
 }
 
 init();
