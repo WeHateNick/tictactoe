@@ -22,7 +22,17 @@ let player1Symbol, player2Symbol,
 			c1: 'C1',
 			c2: 'C2',
 			c3: 'C3',
-		};
+		},
+		winningStrategies = [
+			['a1', 'b1', 'c1'],
+			['a2', 'b2', 'c2'],
+			['a3', 'b3', 'c3'],
+			['a1', 'a2', 'a3'],
+			['b1', 'b2', 'b3'],
+			['c1', 'c2', 'c3'],
+			['a1', 'b2', 'c3'],
+			['c1', 'b2', 'a3']
+		];
 
 let turnOptions = [
 	{
@@ -90,12 +100,30 @@ function startGame () {
 	showBoard();
 	showTurnOptions();
 }
+function referee (_callback) {
+	// Check if there is a winner or a draw
+	winningStrategies.forEach( (strategy) => {
+		if ( 	boardValues[strategy[0]] === boardValues[strategy[1]] && 
+					boardValues[strategy[0]] === boardValues[strategy[2]] ) {
+			endGame(boardValues[strategy[0]]);
+			return;
+		}
+	});
+	showBoard();
+	_callback();
+}
+function endGame (symbol) {
+	console.log(
+		chalk.yellow(
+			figlet.textSync(`Player ${symbol} won!`, { horizontalLayout: 'full' })
+		)
+	);
+}
 function playerTurn (cell) {
 	boardValues[cell.toLowerCase()] = `${player1Symbol} `;
 	_.pull(availableCells, cell)
 	log(chalk.yellow(`You selected ${chalk.blue(cell)}`));
-	showBoard();
-	endPlayerTurn();
+	referee( () => { endPlayerTurn(); });
 }
 function endPlayerTurn () {
 	thinking.start();
@@ -105,11 +133,10 @@ function endPlayerTurn () {
 	}, 6000);
 }
 function computerTurn () {
-	let selection = availableCells.splice(_.random(1, availableCells.length), 1);
+	let selection = availableCells.splice(_.random(0, availableCells.length -1), 1);
 	boardValues[selection[0].toLowerCase()] = `${player2Symbol} `;
 	log(chalk.yellow(`Your opponent selected ${chalk.red(selection[0])}`));
-	showBoard();
-	nextTurn();
+	referee( () => { nextTurn(); });
 }
 function nextTurn () {
 	log(chalk.blue(`You\'re up again. Select a place to put your "${chalk.yellow(player1Symbol)}" mark on`));
