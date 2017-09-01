@@ -3,6 +3,7 @@
 const chalk       = require('chalk');
 const clear       = require('clear');
 const CLI         = require('clui');
+const Spinner     = CLI.Spinner;
 const figlet      = require('figlet');
 const inquirer    = require('inquirer');
 const fs          = require('fs');
@@ -43,6 +44,8 @@ let playerOptions = [
 	}
 ];
 
+let thinking = new Spinner('Your opponent is thinking...'); // This just helps simulate the experience of playing with another person
+
 function init () {
 	clear();
 	log(
@@ -56,7 +59,13 @@ function init () {
 	inquirer.prompt(playerOptions).then(function (answer) {
 		clear();
 		log(chalk.yellow('Great. You selected', answer.player));
-		player1Symbol = answer.player === 'Player X' ? 'X' : 'O';
+		if (answer.player === 'Player X') {
+			player1Symbol = 'X';
+			player2Symbol = '0';
+		} else {
+			player1Symbol = '0';
+			player2Symbol = 'X';
+		}
 		startGame();
 	})
 }
@@ -84,14 +93,24 @@ function showTurnOptions () {
 	})
 }
 function playerTurn (cell) {
-	log(`You selected ${cell}`);
 	boardValues[cell.toLowerCase()] = `${player1Symbol} `;
-	showBoard();
 	_.pull(availableCells, cell)
-	nextTurn();
+	log(chalk.blue(`You selected ${chalk.yellow(cell)}`));
+	showBoard();
+	endPlayerTurn();
 }
-function nextTurn () {
-	showTurnOptions();	
+function endPlayerTurn () {
+	thinking.start();
+	setTimeout( () => {
+		thinking.stop();
+		computerTurn();
+	}, 6000);
+}
+function computerTurn () {
+	let selection = availableCells.splice(_.random(1, availableCells.length), 1);
+	boardValues[selection[0].toLowerCase()] = `${player2Symbol} `;
+	log(chalk.red(`Your opponent selected ${chalk.yellow(selection[0])}`));
+	showBoard();
 }
 
 init();
