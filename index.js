@@ -56,14 +56,12 @@ let thinking = new Spinner('Your opponent is thinking...'); // This just helps s
 
 function init () {
 	clear();
-	log(
-	  chalk.yellow(
-	    figlet.textSync('Nick\'s Tic Tac Toe', { horizontalLayout: 'full' })
-	  )
-	);
-	log(
-	  chalk.yellow('Welcome to Nick\'s Tic Tac Toe')
-	);
+	log(chalk.yellow(
+    figlet.textSync('Nick\'s Tic Tac Toe', { horizontalLayout: 'full' })
+	));
+	log(chalk.yellow(
+		'Welcome to Nick\'s Tic Tac Toe'
+	));
 	inquirer.prompt(playerOptions).then(function (answer) {
 		clear();
 		log(chalk.yellow('Great. You selected', chalk.blue(answer.player)));
@@ -102,7 +100,7 @@ function showBoard () {
 }
 function showTurnOptions () {
 	inquirer.prompt(turnOptions).then(function (answer) {
-		playerTurn(answer.cell);
+		makePlay(answer.cell);
 	})
 }
 function startGame () {
@@ -110,46 +108,7 @@ function startGame () {
 	showBoard();
 	showTurnOptions();
 }
-function referee (_callback) {
-	// Check if there is a winner or a draw
-	let gameEnded = false;
-
-	winningStrategies.forEach( (strategy) => {
-		if ( 	
-				boardValues[strategy[0]] === boardValues[strategy[1]] && 
-				boardValues[strategy[0]] === boardValues[strategy[2]] 
-		) {
-			endGame(boardValues[strategy[0]]);
-			gameEnded = true;
-		}
-	});
-
-	if (!gameEnded && !availableCells.length) {
-		endGame('draw');
-		gameEnded = true;
-	} else if (!gameEnded) {
-		showBoard();
-		_callback();
-	}
-}
-
-function endGame (symbol) {
-	showBoard();
-	if (symbol === 'draw') {
-		console.log(
-			chalk.yellow(
-				figlet.textSync(`Draw`, { horizontalLayout: 'full' })
-			)
-		);
-	} else {
-		console.log(
-			chalk.yellow(
-				figlet.textSync(`Player ${symbol} won!`, { horizontalLayout: 'full' })
-			)
-		);
-	}
-}
-function playerTurn (cell) {
+function makePlay (cell) {
 	boardValues[cell.toLowerCase()] = `${player1Symbol} `;
 	_.pull(availableCells, cell)
 	clear();
@@ -170,6 +129,39 @@ function computerTurn () {
 function nextTurn () {
 	log(chalk.blue(`You\'re up again. Select a cell to put your "${chalk.yellow(player1Symbol)}" mark on`));
 	showTurnOptions();
+}
+function referee (_callback) {
+	// Check if there is a winner or a draw
+	let gameEnded = false;
+
+	winningStrategies.forEach( (strategy) => {
+		if ( 	
+				boardValues[strategy[0]] === boardValues[strategy[1]] && 
+				boardValues[strategy[0]] === boardValues[strategy[2]] 
+		) {
+			gameEnded = true;
+			endGame(boardValues[strategy[0]]); // Passing the winner's symbol
+		}
+	});
+
+	if (!gameEnded && !availableCells.length) {
+		endGame('draw');
+	} else if (!gameEnded) {
+		showBoard();
+		_callback();
+	}
+}
+function endGame (winner) {
+	showBoard();
+	if (winner === 'draw') {
+		log(chalk.yellow(
+			figlet.textSync(`Draw`, { horizontalLayout: 'full' })
+		));
+	} else {
+		log(chalk.yellow(
+			figlet.textSync(`Player ${winner} won!`, { horizontalLayout: 'full' })
+		));
+	}
 }
 
 init();
