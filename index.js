@@ -143,21 +143,18 @@ function playerTurn (cell) {
 	_.pull(availableCells, cell)
 	clear();
 	log(chalk.yellow(`You selected ${chalk.blue(cell)}`));
-	referee( () => { endPlayerTurn(); });
-}
-function endPlayerTurn () {
-	thinking.start();
-	setTimeout( () => {
-		thinking.stop();
-		computerTurn();
-	}, 6000);
+	referee( () => { computerTurn(); });
 }
 function computerTurn () {
+	thinking.start();
 	let selection = availableCells.splice(_.random(0, availableCells.length -1), 1);
 	boardValues[selection[0].toLowerCase()] = `${player2Symbol} `;
-	clear();
-	log(chalk.yellow(`Your opponent selected ${chalk.red(selection[0])}`));
-	referee( () => { nextTurn(); });
+	setTimeout( () => {
+		thinking.stop();
+		clear();
+		log(chalk.yellow(`Your opponent selected ${chalk.red(selection[0])}`));
+		referee( () => { nextTurn(); });
+	}, 6000);
 }
 function nextTurn () {
 	log(chalk.blue(`You\'re up again. Select a place to put your "${chalk.yellow(player1Symbol)}" mark on`));
