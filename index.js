@@ -10,21 +10,19 @@ const fs          = require('fs');
 const _          	= require('lodash');
 const log					= console.log;
 
-var player1Symbol, player2Symbol;
-
-var availableCells = ['A1', 'A2', 'A3', 'B1', 'B2', 'B3', 'C1', 'C2', 'C3'];
-
-var boardValues = {
-	a1: 'A1',
-	a2: 'A2',
-	a3: 'A3',
-	b1: 'B1',
-	b2: 'B2',
-	b3: 'B3',
-	c1: 'C1',
-	c2: 'C2',
-	c3: 'C3',
-};
+let player1Symbol, player2Symbol, 
+		availableCells = ['A1', 'A2', 'A3', 'B1', 'B2', 'B3', 'C1', 'C2', 'C3'],
+		boardValues = {
+			a1: 'A1',
+			a2: 'A2',
+			a3: 'A3',
+			b1: 'B1',
+			b2: 'B2',
+			b3: 'B3',
+			c1: 'C1',
+			c2: 'C2',
+			c3: 'C3',
+		};
 
 let turnOptions = [
 	{
@@ -58,7 +56,7 @@ function init () {
 	);
 	inquirer.prompt(playerOptions).then(function (answer) {
 		clear();
-		log(chalk.yellow('Great. You selected', answer.player));
+		log(chalk.yellow('Great. You selected', chalk.blue(answer.player)));
 		if (answer.player === 'Player X') {
 			player1Symbol = 'X';
 			player2Symbol = 'O';
@@ -82,20 +80,20 @@ function showBoard () {
 		    +----+----+----+
 	`));
 }
-function startGame () {
-	log(chalk.blue(`You\'re up first. Select a place to put your "${player1Symbol}" mark on`));
-	showBoard();
-	showTurnOptions();
-}
 function showTurnOptions () {
 	inquirer.prompt(turnOptions).then(function (answer) {
 		playerTurn(answer.cell);
 	})
 }
+function startGame () {
+	log(chalk.yellow(`You\'re up first. Select a place to put your "${chalk.blue(player1Symbol)}" mark on`));
+	showBoard();
+	showTurnOptions();
+}
 function playerTurn (cell) {
 	boardValues[cell.toLowerCase()] = `${player1Symbol} `;
 	_.pull(availableCells, cell)
-	log(chalk.blue(`You selected ${chalk.yellow(cell)}`));
+	log(chalk.yellow(`You selected ${chalk.blue(cell)}`));
 	showBoard();
 	endPlayerTurn();
 }
@@ -109,7 +107,7 @@ function endPlayerTurn () {
 function computerTurn () {
 	let selection = availableCells.splice(_.random(1, availableCells.length), 1);
 	boardValues[selection[0].toLowerCase()] = `${player2Symbol} `;
-	log(chalk.red(`Your opponent selected ${chalk.yellow(selection[0])}`));
+	log(chalk.yellow(`Your opponent selected ${chalk.red(selection[0])}`));
 	showBoard();
 	nextTurn();
 }
