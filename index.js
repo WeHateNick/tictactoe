@@ -103,17 +103,20 @@ function startGame () {
 function referee (_callback) {
 	// Check if there is a winner or a draw
 	let gameEnded = false;
-	winningStrategies.forEach( (strategy) => {
-		if (!availableCells.length) {
-			endGame('draw');
-			gameEnded = true;
-		}
-		if ( 	boardValues[strategy[0]] === boardValues[strategy[1]] && 
-					boardValues[strategy[0]] === boardValues[strategy[2]] ) {
-			endGame(boardValues[strategy[0]]);
-			gameEnded = true;
-		}
-	});
+	if (!availableCells.length) {
+		endGame('draw');
+		gameEnded = true;
+	} else {
+		winningStrategies.forEach( (strategy) => {
+			if ( 	
+					boardValues[strategy[0]] === boardValues[strategy[1]] && 
+					boardValues[strategy[0]] === boardValues[strategy[2]] 
+			) {
+				endGame(boardValues[strategy[0]]);
+				gameEnded = true;
+			}
+		});
+	}
 	if (!gameEnded) {
 		showBoard();
 		_callback();
