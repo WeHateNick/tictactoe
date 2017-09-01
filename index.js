@@ -103,6 +103,9 @@ function startGame () {
 function referee (_callback) {
 	// Check if there is a winner or a draw
 	winningStrategies.forEach( (strategy) => {
+		if (!availableCells.length) {
+			endGame('draw');
+		}
 		if ( 	boardValues[strategy[0]] === boardValues[strategy[1]] && 
 					boardValues[strategy[0]] === boardValues[strategy[2]] ) {
 			endGame(boardValues[strategy[0]]);
@@ -113,11 +116,19 @@ function referee (_callback) {
 	_callback();
 }
 function endGame (symbol) {
-	console.log(
-		chalk.yellow(
-			figlet.textSync(`Player ${symbol} won!`, { horizontalLayout: 'full' })
-		)
-	);
+	if (symbol === 'draw') {
+		console.log(
+			chalk.yellow(
+				figlet.textSync(`Draw`, { horizontalLayout: 'full' })
+			)
+		);
+	} else {
+		console.log(
+			chalk.yellow(
+				figlet.textSync(`Player ${symbol} won!`, { horizontalLayout: 'full' })
+			)
+		);
+	}
 }
 function playerTurn (cell) {
 	boardValues[cell.toLowerCase()] = `${player1Symbol} `;
