@@ -112,17 +112,19 @@ function referee (_callback) {
 			endGame(boardValues[strategy[0]]);
 			gameEnded = true;
 		}
+	});
 
-		if (!availableCells.length) { // Checks for draw after checking for wins, because a player can win on the last turn
-			endGame('draw');
-			gameEnded = true;
-		}
+	if (!availableCells.length) { // Checks for draw after checking for wins, because a player can win on the last turn
+		endGame('draw');
+		gameEnded = true;
+	}
 
-		if (!gameEnded) {
-			showBoard();
-			_callback();
-		}
+	if (!gameEnded) {
+		showBoard();
+		_callback();
+	}
 }
+
 function endGame (symbol) {
 	showBoard();
 	if (symbol === 'draw') {
