@@ -114,12 +114,10 @@ function referee (_callback) {
 		}
 	});
 
-	if (!availableCells.length) { // Checks for draw after checking for wins, because a player can win on the last turn
+	if (!gameEnded && !availableCells.length) {
 		endGame('draw');
 		gameEnded = true;
-	}
-
-	if (!gameEnded) {
+	} else if (!gameEnded) {
 		showBoard();
 		_callback();
 	}
@@ -157,7 +155,7 @@ function computerTurn () {
 		clear();
 		log(chalk.yellow(`Your opponent selected ${chalk.red(selection[0])}`));
 		referee( () => { nextTurn(); });
-	}, 6000);
+	}, 4000);
 }
 function nextTurn () {
 	log(chalk.blue(`You\'re up again. Select a place to put your "${chalk.yellow(player1Symbol)}" mark on`));
