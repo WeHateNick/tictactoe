@@ -2,8 +2,8 @@
 A command line interface Tic Tac Toe game built in NodeJS
 
 ## Dependencies
-*NodeJS
-*NPM
+* NodeJS
+* NPM
 
 ## Running the CLI
 1. Clone this repository and cd into it
