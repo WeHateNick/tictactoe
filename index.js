@@ -102,20 +102,25 @@ function startGame () {
 }
 function referee (_callback) {
 	// Check if there is a winner or a draw
+	let gameEnded = false;
 	winningStrategies.forEach( (strategy) => {
 		if (!availableCells.length) {
 			endGame('draw');
+			gameEnded = true;
 		}
 		if ( 	boardValues[strategy[0]] === boardValues[strategy[1]] && 
 					boardValues[strategy[0]] === boardValues[strategy[2]] ) {
 			endGame(boardValues[strategy[0]]);
-			return;
+			gameEnded = true;
 		}
 	});
-	showBoard();
-	_callback();
+	if (!gameEnded) {
+		showBoard();
+		_callback();
+	}
 }
 function endGame (symbol) {
+	showBoard();
 	if (symbol === 'draw') {
 		console.log(
 			chalk.yellow(
@@ -133,6 +138,7 @@ function endGame (symbol) {
 function playerTurn (cell) {
 	boardValues[cell.toLowerCase()] = `${player1Symbol} `;
 	_.pull(availableCells, cell)
+	clear();
 	log(chalk.yellow(`You selected ${chalk.blue(cell)}`));
 	referee( () => { endPlayerTurn(); });
 }
@@ -146,6 +152,7 @@ function endPlayerTurn () {
 function computerTurn () {
 	let selection = availableCells.splice(_.random(0, availableCells.length -1), 1);
 	boardValues[selection[0].toLowerCase()] = `${player2Symbol} `;
+	clear();
 	log(chalk.yellow(`Your opponent selected ${chalk.red(selection[0])}`));
 	referee( () => { nextTurn(); });
 }
